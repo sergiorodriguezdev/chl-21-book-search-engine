@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+// Define GraphQL 'me' query
 export const GET_ME = gql`
     query me {
         me {

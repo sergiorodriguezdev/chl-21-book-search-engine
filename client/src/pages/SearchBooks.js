@@ -10,9 +10,9 @@ import {
 } from "react-bootstrap";
 
 import Auth from "../utils/auth";
-// import { saveBook, searchGoogleBooks } from '../utils/API';
 import { searchGoogleBooks } from "../utils/API";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
+// Import useMutation method and GraphQL mutation definition
 import { useMutation } from "@apollo/client";
 import { SAVE_BOOK } from "../utils/mutations";
 
@@ -25,6 +25,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
+  // Create saveBook method from mutation definition
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
@@ -78,12 +79,11 @@ const SearchBooks = () => {
     }
 
     try {
-      // const response = await saveBook(bookToSave, token);
+      // Execute saveBook mutation, pass book value
       const { data } = await saveBook({
         variables: { book: bookToSave },
       });
 
-      // if (!response.ok) {
       if (!data || error) {
         throw new Error("something went wrong!");
       }

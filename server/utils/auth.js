@@ -6,7 +6,6 @@ const expiration = '2h';
 
 module.exports = {
   // function for our authenticated routes
-  // authMiddleware: function (req, res, next) {
     authMiddleware: function ({ req }) {
     // allows token to be sent via  req.body, req.query or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
@@ -16,8 +15,8 @@ module.exports = {
       token = token.split(' ').pop().trim();
     }
 
+    // If there is no token, return the request object unchanged
     if (!token) {
-      // return res.status(400).json({ message: 'You have no token!' });
       return req;
     }
 
@@ -27,11 +26,9 @@ module.exports = {
       req.user = data;
     } catch {
       console.log('Invalid token');
-      // return res.status(400).json({ message: 'invalid token!' });
     }
 
-    // send to next endpoint
-    // next();
+    // Return changed request object which includes the user information
     return req;
   },
   signToken: function ({ username, email, _id }) {

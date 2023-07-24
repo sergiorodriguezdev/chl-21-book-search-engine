@@ -7,16 +7,19 @@ import {
   Button,
 } from "react-bootstrap";
 
-// import { getMe, deleteBook } from "../utils/API";
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
+// Import useQuery nand useMutation methods
 import { useQuery, useMutation } from "@apollo/client";
+// Import GraphQL query definition
 import { GET_ME } from "../utils/queries";
+// Import GraphQL mutation definition
 import { REMOVE_BOOK } from "../utils/mutations";
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
+  // Execute GraphQL query
   const { loading, data } = useQuery(GET_ME);
 
   // use this to determine if `useEffect()` hook needs to run again
@@ -24,31 +27,7 @@ const SavedBooks = () => {
 
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-  //       if (!token) {
-  //         return false;
-  //       }
-
-  //       const response = await getMe(token);
-
-  //       if (!response.ok) {
-  //         throw new Error('something went wrong!');
-  //       }
-
-  //       const user = await response.json();
-  //       setUserData(user);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   getUserData();
-  // }, [userDataLength]);
-
+  // Set user data on page load
   useEffect(() => {
     const user = data?.me || {};
     setUserData(user);
@@ -63,16 +42,16 @@ const SavedBooks = () => {
     }
 
     try {
-      // const response = await deleteBook(bookId, token);
+      // Execute removeBook mutation, pass bookId value
       const { data } = await removeBook({
         variables: { bookId },
       });
-      // if (!response.ok) {
+
       if (!data || error) {
         throw new Error("something went wrong!");
       }
 
-      // const updatedUser = await response.json();
+      // Get updated user data
       const updatedUser = data?.removeBook;
 
       setUserData(updatedUser);

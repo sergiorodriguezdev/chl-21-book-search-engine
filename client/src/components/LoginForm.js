@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 
-// import { loginUser } from '../utils/API';
 import Auth from "../utils/auth";
+// Import useMutation method and GraphQL mutation definition
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
 
@@ -12,6 +12,7 @@ const LoginForm = () => {
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  // Create loginUser method from mutation definition
   const [loginUser, { error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
@@ -30,7 +31,7 @@ const LoginForm = () => {
     }
 
     try {
-      // const response = await loginUser(userFormData);
+      // Execute loginUser mutation, pass email and password values
       const { data } = await loginUser({
         variables: {
           email: userFormData.email,
@@ -38,12 +39,11 @@ const LoginForm = () => {
         },
       });
 
-      // if (!response.ok) {
       if (!data || error) {
         throw new Error("something went wrong!");
       }
 
-      // const { token, user } = await response.json();
+            // Get token and logged in user data
       const { token, user } = data?.login;
       console.log(user);
       Auth.login(token);
